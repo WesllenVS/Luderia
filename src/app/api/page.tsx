@@ -4,7 +4,7 @@ interface Product {
     plays: string;
     price: number;
     time: string;
-    image: string 
+    image: string
 }
 
 const dataProducts: Product[] = [
@@ -14,7 +14,7 @@ const dataProducts: Product[] = [
         "plays": "1-4",
         "price": 40.00,
         "time": "80 min",
-        "image": "/Everll.png"
+        "image": "/Everdell.png"
     },
     {
         "id": 2,
