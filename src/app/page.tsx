@@ -23,22 +23,41 @@ interface CartItem extends Product {
 
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [cart, setCarts] = useState<[]>([]);
+  const [cart, setCart] = useState<CartItem[]>([]);
 
   useEffect(() => {
     setProducts(dataProducts);
-  })
+    const storedCart = localStorage.getItem('cart');
+    if (storedCart) {
+      setCart(JSON.parse(storedCart));
+    }
+  }, []);
 
-  const addCart = () => { }
+  const addToCart = (id: number) => {
+    const product = products.find((prod: Product) => prod.id === id);
+
+    if (!product) return;
+
+    const existingProduct = cart.find(item => item.id === id);
+
+    let updateCart: CartItem[];
+
+    if (existingProduct) {
+      updateCart = cart.map(item => item.id ? { ...item, quantity: item.quantity + 1 } : item);
+    } else {
+      updateCart = [...cart, { ...product, quantity: 1 }];
+    }
+
+    setCart(updateCart);
+    localStorage.setItem('cart', JSON.stringify(updateCart))
+  }
 
   return (
     <div className="mt-80">
       <Header />
-      <div className="p-4">
-
-        <h1 className="text-center text-2xl font-bold md:text-center text-zinc-700">  Conheça nossos jogos: </h1>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-7 md:gap-10 mx-auto max-w-7xl px-2 mb-16">
+      <div className="p-3">
+        <h1 className="text-center text-3xl font-bold md:text-center text-zinc-700 pb-15">  Conheça nossos jogos: </h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7 w-11/12 mx-auto mb-16">
           {products.map(product => (
             <MenuItems
               key={product.id}
@@ -49,14 +68,13 @@ export default function Home() {
               price={product.price}
               time={product.time}
               image={product.image}
-              addCart={addCart}
+              addToCart={addToCart}
             />
           ))}
         </div>
-        <CartButton />
+        <CartButton itemCount={cart.length} />
       </div>
-
       <Footer />
-    </div>
+    </div >
   );
 }

@@ -6,13 +6,12 @@ interface MenuItemsProps {
     time: string;
     price: number;
     image: string;
-    addCart: (id: number) => void
+    addToCart: (id: number) => void
 }
-
 import { IconPlus } from "@tabler/icons-react";
 import { Interface } from "readline";
 
-const MenuItems = ({ id, name, /*description,*/ plays, time, price, image, addCart }: MenuItemsProps) => {
+const MenuItems = ({ id, name, /*description,*/ plays, time, price, image, addToCart }: MenuItemsProps) => {
     return (
         <div className="flex items-center space-x-4 p-4 border-b hover:bg-zinc-200 duration-75 transition-colors">
             <img src={image} alt={name} className="w-28 h-28 rounded-md hover:-rotate-15 hover:scale-115 duration-300" />
@@ -21,7 +20,7 @@ const MenuItems = ({ id, name, /*description,*/ plays, time, price, image, addCa
                 <p className="text-sm text-gray-600">{plays}</p>
                 <div className="flex justify-between">
                     <p className="text-lg font-semibold text-red-400">R$ {price.toFixed(2)}</p>
-                    <button className="flex items-center gap-1 bg-green-300 rounded-md border border-zinc-300 px-2 py-1 text-sm text-black sm:w-[100px] h-[30px] mx-auto">
+                    <button onClick={() => addToCart(id)} className="flex items-center gap-1 bg-green-300 rounded-md border border-zinc-300 px-2 py-1 text-sm text-black sm:w-[100px] h-[30px] mx-auto">
                         <IconPlus size={16} stroke={2} />
                         <p>Adicionar</p>
                     </button>
