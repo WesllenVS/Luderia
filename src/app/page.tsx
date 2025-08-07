@@ -53,10 +53,11 @@ export default function Home() {
   }
 
   return (
-    <div className="mt-80">
+    /*era 80 nesse mt*/
+    <div className="mt-48"> 
       <Header />
       <div className="p-3">
-        <h1 className="text-center text-3xl font-bold md:text-center text-zinc-700 pb-15">  Conheça nossos jogos: </h1>
+        <h1 className="text-center text-3xl font-bold md:text-center text-zinc-700 pb-7">  Conheça nossos jogos: </h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7 w-11/12 mx-auto mb-16">
           {products.map(product => (
             <MenuItems
