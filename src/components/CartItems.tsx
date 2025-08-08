@@ -34,6 +34,46 @@ const CartItems = () => {
     setTotal(newTotal);
   }, [cart]);
 
+  const handleIncrement = (id: number) => {
+    const updateCart = cart.map(item => item.id === id ? { ...item, quantity: item.quantity + 1 } : item);
+    setCart(updateCart);
+    localStorage.setItem('cart', JSON.stringify(updateCart));
+  }
+
+  const handleDecrement = (id: number) => {
+    const existingProducts = cart.find(item => item.id === id);
+    if (existingProducts && existingProducts.quantity > 1) {
+      const updateCart = cart.map(item => item.id === id ? { ...item, quantity: item.quantity - 1 } : item);
+      setCart(updateCart);
+      localStorage.setItem('cart', JSON.stringify(updateCart));
+    } else if (existingProducts && existingProducts.quantity === 1) {
+      const updateCart = cart.filter(item => item.id !== id);
+      setCart(updateCart);
+      localStorage.setItem('cart', JSON.stringify(updateCart));
+    }
+  }
+
+  const isOpen = () => {
+    const currentHour = new Date().getHours();
+    return currentHour >= 1 && currentHour < 24;
+  }
+  const handleWhatsAppOrder = () => {
+    if (!isOpen()) {
+      alert("Fechado no momento, estamos aberto logo menos");
+      return;
+    }
+    if (!fields.name || !fields.lastName || !fields.street || !fields.neighborhood || !fields.number || !fields.phone) {
+      alert("Por favor preencha todos os campos");
+      return;
+    }
+
+    const orderMessage = cart.map(item => `${item.quantity} ${item.name}, `).join('\n');
+    const fieldsMessage = `Nome: ${fields.name}, Sobre Nome: ${fields.lastName}, WhatsApp: ${fields.phone}, Endereço: ${fields.street}, Bairro: ${fields.neighborhood}, Número: ${fields.number}, Observação: ${fields.observation}, `
+    const customerMessage = `Pedido:\n${orderMessage}\n---> TOTAL R$: ${total.toFixed(2)} <---\n${fieldsMessage}`;
+    const WhatsAppUrl = `https://wa.me/993013140?text=${encodeURIComponent(customerMessage)}`;
+    window.location.href = WhatsAppUrl;
+  }
+
   const router = useRouter();
   const backToHome = () => {
     router.push("/");
@@ -69,18 +109,14 @@ const CartItems = () => {
             >
               <img src={item.image} alt={item.name} width={100} />
               <div className="flex flex-col items-center ml-3">
-                <span className="text-center text-zinc-700 font-bold">
-                  {item.name} - (Qtd. {item.quantity})
-                </span>
-                <span className="text-center text-red-400 font-bold">
-                  R$ {(item.price * item.quantity).toFixed(2)}{" "}
-                </span>
+                <span className="text-center text-zinc-700 font-bold">{item.name} - (Qtd. {item.quantity})</span>
+                <span className="text-center text-red-400 font-bold">R$ {(item.price * item.quantity).toFixed(2)}{" "}</span>
                 <div className="gap-2 flex justify-around items-center bg-zinc-300 rounded-full">
-                  <button className="w-[40px] pl-2">
+                  <button onClick={() => handleDecrement(item.id)} className="w-[40px] pl-2">
                     <IconMinus size={20} stroke={2} color="blue" />
                   </button>
                   <span className="text-white">|</span>
-                  <button className="w-[40px] pl-2  bg-green-200 rounded-full">
+                  <button onClick={() => handleIncrement(item.id)} className="w-[40px] pl-2  bg-green-200 rounded-full">
                     <IconPlus size={20} stroke={2} color="red" />
                   </button>
                 </div>
@@ -149,7 +185,7 @@ const CartItems = () => {
           </div>
           <div className="text-center">
             <p className="font-bold text-lg text-zinc-700">Total: R$ {total.toFixed(2)}</p>
-            <button className="bg-green-500 text-white px-4 py-2 rounded-lg mt-4 mb-7">
+            <button onClick={handleWhatsAppOrder} className="bg-green-500 text-white px-4 py-2 rounded-lg mt-4 mb-7">
               Finalizar Pedido
             </button>
           </div>
