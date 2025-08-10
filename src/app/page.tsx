@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import CartButton from "@/components/CartButton";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import dataProducts from "./api/page";
+import { GET } from "./api/page/route";
 import Image from "next/image";
 import MenuItems from "@/components/MenuItems";
 
@@ -26,7 +26,15 @@ export default function Home() {
   const [cart, setCart] = useState<CartItem[]>([]);
 
   useEffect(() => {
-    setProducts(dataProducts);
+    const castData = async () => {
+      const resp = await fetch('/api/page'); // Faz requisição à API
+      const data: Product[] = await resp.json();
+      setProducts(data);
+    };
+    castData();
+  }, []);
+
+  useEffect(() => {
     const storedCart = localStorage.getItem('cart');
     if (storedCart) {
       setCart(JSON.parse(storedCart));
@@ -54,7 +62,7 @@ export default function Home() {
 
   return (
     /*era 80 nesse mt*/
-    <div className="mt-48"> 
+    <div className="mt-48">
       <Header />
       <div className="p-3">
         <h1 className="text-center text-3xl font-bold md:text-center text-zinc-700 pb-7">  Conheça nossos jogos: </h1>

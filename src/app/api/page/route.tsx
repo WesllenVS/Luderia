@@ -1,3 +1,5 @@
+import { NextRequest, NextResponse } from "next/server";
+
 interface Product {
     id: number;
     name: string;
@@ -50,4 +52,7 @@ const dataProducts: Product[] = [
     }
 ]
 
-export default dataProducts;
+// export default dataProducts;
+export async function GET() {
+    return NextResponse.json(dataProducts);
+}

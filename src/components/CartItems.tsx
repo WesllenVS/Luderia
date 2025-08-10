@@ -9,8 +9,18 @@ import {
   IconShoppingCartX,
 } from "@tabler/icons-react";
 
+interface Product {
+  id: number;
+  name: string;
+  plays: string;
+  price: number;
+  time: string;
+  image: string;
+  quantity: number
+}
+
 const CartItems = () => {
-  const [cart, setCart] = useState<any[]>([]);
+  const [cart, setCart] = useState<Product[]>([]);
   const [total, setTotal] = useState(0);
   const [fields, setFields] = useState({
     name: "",
